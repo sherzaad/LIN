@@ -13,7 +13,7 @@
 #include <HardwareSerialLIN_private.h>
 
 //return the LIN frame type received by UART buffer
-inline uint8_t FieldType(uint16_t val) {
+inline uint16_t FieldType(uint16_t val) {
   return (val & 0xFF00);
 }
 
