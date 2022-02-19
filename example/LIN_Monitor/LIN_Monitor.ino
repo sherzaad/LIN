@@ -4,7 +4,13 @@
 #define LIN_BAUD2 19200UL
 
 void setup() {
-  Serial.begin(115200);
+  /*IMPORTANT BEFORE START*/
+  /*
+   * if you are using ANY other the Hw Serial Ports for other that LIN, 
+   * you MUST move the corresponding HardwareSerialLINx.cpp file to the 'OtherThanLIN' folder.
+   * Else you may have 'multiple definition' compile error 
+   */
+  Serial.begin(115200); //HardwareSerialLIN0.cpp moved to 'OtherThanLIN' folder since using Serial0 port for Serial Monitor
   LIN1.begin(LIN_BAUD2);
 
   Serial.println("READY");
@@ -12,42 +18,34 @@ void setup() {
 }
 
 void loop() {
-  union {
-    uint16_t val;
-    uint8_t bytes[2];
-  } in;
-
   if (LIN1.available()) {
-    in.val = LIN1.read();
+    uint16_t val = LIN1.read();
 
-    if (in.bytes[1] == BREAKFIELD) {
+    if (FieldType(val) == BREAKFIELD) {
       Serial.println("");
     }
-    else if (in.bytes[1] == NEW_FRAME) {
+    else if (FieldType(val) == NEW_FRAME) {
       Serial.println("");
       Serial.print("New Frame: ");
-      Serial.print(in.bytes[0], HEX);
+      Serial.print(val & 0xFF, HEX);
       Serial.print(", ");
     }
-    else if (in.bytes[1] == SYNC) {
+    else if (FieldType(val) == SYNC) {
       Serial.print("Sync: ");
-      Serial.print(in.bytes[0], HEX);
+      Serial.print(val & 0xFF, HEX);
       Serial.print(", ");
     }
-    else if (in.bytes[1] == PID) {
+    else if (FieldType(val) == PID) {
       Serial.print("PID: ");
-      Serial.print(in.bytes[0], HEX);
+      Serial.print(val & 0xFF, HEX);
       Serial.print(", ID: ");
-      Serial.print(in.bytes[0] & 0x3F, HEX);
+      Serial.print((val & 0xFF) & 0x3F, HEX);
       Serial.print(", Data: ");
     }
-    else if (in.bytes[1] == DATA) {
-      Serial.print(in.bytes[0], HEX); //data/checksum bytes
+    else if (FieldType(val) == DATA) {
+      Serial.print(val & 0xFF, HEX); //data/checksum bytes. 
+                                     //Last received DATA byte of a given LIN frame would normally be the Checksum Byte
       Serial.print(", ");
-    }
-    else if (in.bytes[1] == CHECKSUM){
-      Serial.print("Checksum: ");
-      Serial.print(in.bytes[0], HEX); //checksum bytes
     }
   }
 
