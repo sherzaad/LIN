@@ -199,7 +199,7 @@ int HardwareSerialLIN::read(void)
     if (newtime - oldtime > timeout_bit) {
       val = (val & 0x00FF) | NEW_FRAME;
     }
-    else if (((val & 0xFF00) | BREAKFIELD) == BREAKFIELD) {
+    else if ((val & 0x00FF) == 0 && (val & (1 << (8 + FE0))) == 1) {
       val = (val & 0x00FF) | BREAKFIELD;
       //previous byte = CHECKSUM; //no point since previous data was already read!
     }
