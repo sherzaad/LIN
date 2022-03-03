@@ -94,9 +94,8 @@ void HardwareSerialLIN::begin(unsigned long baud, byte config)
 {
   // Try u2x mode first
   uint16_t baud_setting = (F_CPU / 4 / baud - 1) / 2;
-  baudrate = baud;
 
-  Read_Timeout();
+  Read_Timeout(baud);
   *_ucsra = 1 << U2X0;
 
   // hardcoded exception for 57600 for compatibility with the bootloader
@@ -142,25 +141,10 @@ void HardwareSerialLIN::end()
   _rx_buffer_head = _rx_buffer_tail;
 }
 
-void HardwareSerialLIN::send_break(uint8_t brk_bits)
-{
-  unsigned long brk_baud = 9 * (baudrate / brk_bits);
-
-  //breakfield mode
-  end();
-  begin(brk_baud);
-  write(0x00);
-
-  //normal mode
-  end();
-  begin(baudrate);
-
-}
-
-unsigned long HardwareSerialLIN::Read_Timeout(unsigned long bittimeout)
+unsigned long HardwareSerialLIN::Read_Timeout(unsigned long baud, unsigned long bittimeout)
 {
   unsigned long t_bit;
-  t_bit = 1000000 / (baudrate);
+  t_bit = 1000000 / (baud);
 
   timeout_bit = bittimeout * t_bit;
 
@@ -196,12 +180,12 @@ int HardwareSerialLIN::read(void)
     oldtime = _timestamp_buffer[last_buf];
     newtime = _timestamp_buffer[_rx_buffer_tail];
 
-    if (newtime - oldtime > timeout_bit) {
-      val = (val & 0x00FF) | NEW_FRAME;
-    }
-    else if ((val & 0x00FF) == 0 && (val & (1 << (8 + FE0))) == 1) {
+    if ((val & 0x00FF) == 0 && (val & (1 << (8 + FE0))) != 0) {
       val = (val & 0x00FF) | BREAKFIELD;
       //previous byte = CHECKSUM; //no point since previous data was already read!
+    }
+	else if (newtime - oldtime > timeout_bit) {
+      val = (val & 0x00FF) | NEW_FRAME;
     }
     else if (((_rx_buffer[last_buf] & 0xFF00) | BREAKFIELD) == BREAKFIELD) {
       val = (val & 0x00FF) | SYNC;
