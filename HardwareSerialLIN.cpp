@@ -184,10 +184,10 @@ int HardwareSerialLIN::read(void)
       val = (val & 0x00FF) | BREAKFIELD;
       //previous byte = CHECKSUM; //no point since previous data was already read!
     }
-	else if (newtime - oldtime > timeout_bit) {
+    else if (newtime - oldtime > timeout_bit) {
       val = (val & 0x00FF) | NEW_FRAME;
     }
-    else if (((_rx_buffer[last_buf] & 0xFF00) | BREAKFIELD) == BREAKFIELD) {
+    else if ((val & 0x00FF) == 0x55 && ((_rx_buffer[last_buf] & 0xFF00) | BREAKFIELD) == BREAKFIELD) {
       val = (val & 0x00FF) | SYNC;
     }
     else if (((_rx_buffer[last_buf] & 0xFF00) | SYNC) == SYNC) {
