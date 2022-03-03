@@ -3,6 +3,7 @@
   ver 1.0 created by Sherzaad Dinah
   Revision History
   ver1.0 - Newly created
+  ver1.1 - Moved 'break' routine to file to fix sending serial break issue
 */
 
 #ifndef	LIN_H
@@ -13,8 +14,21 @@
 #include <HardwareSerialLIN_private.h>
 
 //return the LIN frame type received by UART buffer
-inline uint16_t FieldType(uint16_t val) {
+inline uint16_t LIN_FieldType(uint16_t val) {
   return (val & 0xFF00);
+}
+
+inline LIN_Send_Break(HardwareSerialLIN &s, unsigned long baud, uint8_t brkbits = BREAK_BITS){
+  unsigned long brk_baud = 9 * (baud/ brkbits);
+
+  //breakfield mode
+  s.end();
+  s.begin(brk_baud);
+  s.write(0x00);
+
+  //normal mode
+  s.end();
+  s.begin(baud);	
 }
 
 //return PID for given LIN ID
@@ -76,9 +90,10 @@ inline uint8_t LIN_Checksum_Calc(uint8_t pid, uint8_t *msg_data, uint8_t dlc, ui
 }
 
 //send breakfield, sync field and LIN PID
-inline void Send_LIN_Header_Frame(HardwareSerialLIN &s, uint8_t pid, uint8_t brkbits = BREAK_BITS, uint8_t sync = 0x55)
+inline void Send_LIN_Header_Frame(HardwareSerialLIN &s,unsigned long baud, uint8_t pid, uint8_t brkbits = BREAK_BITS, uint8_t sync = 0x55)
 {
-  s.send_break(brkbits);
+  LIN_Send_Break(s, baud, brkbits);
+  
   s.write(sync);
   s.write(pid);
 }
