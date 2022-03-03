@@ -3,6 +3,7 @@
 /*
 Example to demonstrate sending and receiving LIN message.
 For the purpose of this example, lin message frame is sent out on LIN1 and read back on LIN2 (loopback)
+Example tested on arduino MEGA
 */
 
 #define LIN_BAUD1 9600
