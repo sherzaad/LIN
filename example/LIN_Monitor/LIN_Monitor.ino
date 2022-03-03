@@ -21,28 +21,28 @@ void loop() {
   if (LIN1.available()) {
     uint16_t val = LIN1.read();
 
-    if (FieldType(val) == BREAKFIELD) {
+    if (LIN_FieldType(val) == BREAKFIELD) {
       Serial.println("");
     }
-    else if (FieldType(val) == NEW_FRAME) {
+    else if (LIN_FieldType(val) == NEW_FRAME) {
       Serial.println("");
       Serial.print("New Frame: ");
       Serial.print(val & 0xFF, HEX);
       Serial.print(", ");
     }
-    else if (FieldType(val) == SYNC) {
+    else if (LIN_FieldType(val) == SYNC) {
       Serial.print("Sync: ");
       Serial.print(val & 0xFF, HEX);
       Serial.print(", ");
     }
-    else if (FieldType(val) == PID) {
+    else if (LIN_FieldType(val) == PID) {
       Serial.print("PID: ");
       Serial.print(val & 0xFF, HEX);
       Serial.print(", ID: ");
       Serial.print((val & 0xFF) & 0x3F, HEX);
       Serial.print(", Data: ");
     }
-    else if (FieldType(val) == DATA) {
+    else if (LIN_FieldType(val) == DATA) {
       Serial.print(val & 0xFF, HEX); //data/checksum bytes. 
                                      //Last received DATA byte of a given LIN frame would normally be the Checksum Byte
       Serial.print(", ");
