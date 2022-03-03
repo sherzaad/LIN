@@ -98,7 +98,6 @@ class HardwareSerialLIN : public Stream
     unsigned int _tx_buffer[SERIAL_TX_BUFFER_SIZE];
     unsigned long _timestamp_buffer[SERIAL_RX_BUFFER_SIZE];
     unsigned long timeout_bit;
-    unsigned long baudrate;
 
   public:
     inline HardwareSerialLIN(
@@ -110,9 +109,8 @@ class HardwareSerialLIN : public Stream
     }
     void begin(unsigned long, uint8_t);
     void end();
-    void send_break(uint8_t brk_bits);
     uint32_t *getTimestamp(void); //to be called before read function if used
-    unsigned long Read_Timeout(unsigned long bittimeout = BIT_TIMEOUT); //Sets/Returns read timeout period in microseconds
+    unsigned long Read_Timeout(unsigned long baud, unsigned long bittimeout = BIT_TIMEOUT); //Sets/Returns read timeout period in microseconds
     virtual int available(void);
     virtual int peek(void);
     virtual int read(void);
