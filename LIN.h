@@ -18,7 +18,7 @@ inline uint16_t LIN_FieldType(uint16_t val) {
   return (val & 0xFF00);
 }
 
-inline LIN_Send_Break(HardwareSerialLIN &s, unsigned long baud, uint8_t brkbits = BREAK_BITS){
+inline void LIN_Send_Break(HardwareSerialLIN &s, unsigned long baud, uint8_t brkbits = BREAK_BITS){
   unsigned long brk_baud = 9 * (baud/ brkbits);
 
   //breakfield mode
@@ -59,7 +59,7 @@ inline uint8_t LIN_PID_Calc(uint8_t id)
 }
 
 //returns if given PID is valid or not
-inline uint8_t Verify_LIN_PID(uint8_t pid)
+inline uint8_t LIN_Verify_PID(uint8_t pid)
 {
   uint8_t _pid = LIN_PID_Calc(pid);
 
