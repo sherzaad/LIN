@@ -5,7 +5,6 @@
 
 #include "Stream.h"
 #include "LIN_defs.h"
-
 // Define constants and variables for buffering incoming serial data.  We're
 // using a ring buffer (I think), in which head is the index of the location
 // to which to write the next incoming character and tail is the index of the
@@ -140,7 +139,7 @@ class HardwareSerialLIN : public Stream
 };
 
 #if defined(UBRRH) || defined(UBRR0H)
-extern HardwareSerialLIN LIN;
+extern HardwareSerialLIN LIN0;
 #define HAVE_HWSERIAL0
 #endif
 #if defined(UBRR1H)
