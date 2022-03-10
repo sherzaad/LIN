@@ -22,7 +22,7 @@ ISR(USART_RXC_vect) // ATmega8
 #error "Don't know what the Data Received vector is called for Serial"
 #endif
 {
-  LIN._rx_complete_irq();
+  LIN0._rx_complete_irq();
 }
 
 #if defined(UART0_UDRE_vect)
@@ -37,19 +37,19 @@ ISR(USART_UDRE_vect)
 #error "Don't know what the Data Register Empty vector is called for Serial"
 #endif
 {
-  LIN._tx_udr_empty_irq();
+  LIN0._tx_udr_empty_irq();
 }
 
 #if defined(UBRRH) && defined(UBRRL)
-HardwareSerialLIN LIN(&UBRRH, &UBRRL, &UCSRA, &UCSRB, &UCSRC, &UDR);
+HardwareSerialLIN LIN0(&UBRRH, &UBRRL, &UCSRA, &UCSRB, &UCSRC, &UDR);
 #else
-HardwareSerialLIN LIN(&UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
+HardwareSerialLIN LIN0(&UBRR0H, &UBRR0L, &UCSR0A, &UCSR0B, &UCSR0C, &UDR0);
 #endif
 
 // Function that can be weakly referenced by serialEventRun to prevent
 // pulling in this file if it's not otherwise used.
 bool LINSerial0_available() {
-  return LIN.available();
+  return LIN0.available();
 }
 
 #endif // HAVE_HWSERIAL0
