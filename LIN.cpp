@@ -35,8 +35,8 @@ uint8_t LINClass::GetPID(uint8_t id)
   //calculate parity bits for protected id(pid) from id
   //calcultate P1
   bit6 = BIT_VAL(id, 0);
-  bit6 ^= BIT_VAL(id, 1);
   bit6 ^= BIT_VAL(id, 2);
+  bit6 ^= BIT_VAL(id, 3);
   bit6 ^= BIT_VAL(id, 4);
   bit6 = (bit6 && 0x01) << 6;
 
