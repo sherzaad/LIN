@@ -45,7 +45,7 @@ uint8_t LINClass::GetPID(uint8_t id)
   bit7 ^= BIT_VAL(id, 3);
   bit7 ^= BIT_VAL(id, 4);
   bit7 ^= BIT_VAL(id, 5);
-  bit7 = (bit7 && 0x01) << 7;
+  bit7 = ((!bit7) && 0x01) << 7;
 
   pid = temp | bit6 | bit7;
 
