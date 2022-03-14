@@ -66,19 +66,20 @@ uint8_t LINClass::VerifyPID(uint8_t pid)
 uint8_t LINClass::GetChecksum(uint8_t pid, uint8_t *msg_data, uint8_t dlc, uint8_t LINver)
 {
   uint8_t length = dlc;
-  uint16_t calc_checksum = 0;
 
   //----LINver=1 any version before 2.0. LINver=2 version 2.0 and above----//
   //LINver=1 Classic Checksum
-  for (uint8_t i = 0; i < length; ++i) {
+  uint16_t calc_checksum = msg_data[0];
+  for (uint8_t i = 1; i < length; ++i) {
     calc_checksum += msg_data[i];
+    if(calc_checksum > 255) calc_checksum -= 255;
   }
 
   if (LINver == 2) { //Enhanced Checksum
     calc_checksum += pid;
   }
 
-  if (calc_checksum >= 256) calc_checksum -= 255;
+  if (calc_checksum > 255) calc_checksum -= 255;
 
   return (uint8_t) ((~calc_checksum) & 0x00FF);
 }
