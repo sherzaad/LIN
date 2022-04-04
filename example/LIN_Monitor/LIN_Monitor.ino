@@ -1,3 +1,5 @@
+/* This example was tested on a Mega2560. Serial1 was connected via a suitable LIN transceiver such as a MCP2003 to sniff LIN bus*/
+
 #include "LIN.h"
 
 #define LIN_BAUD1 9600
