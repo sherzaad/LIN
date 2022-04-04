@@ -1,2 +1,2 @@
 # LIN
-Arduino Library to enable LIN communication using AVR Hardware UART
+Arduino Library using AVR Hardware UART to allow LIN communication
