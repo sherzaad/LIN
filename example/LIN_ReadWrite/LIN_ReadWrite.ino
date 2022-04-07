@@ -1,4 +1,4 @@
-/* This example was tested on a Mega2560. Serial1(sender Lin Node) and looked back onto Serial2(receiver lin Node) to emulate a LIN network.*/
+/* This example was tested on a Mega2560. Serial1(sender Lin Node) was looped back onto Serial2(receiver lin Node) to emulate a LIN network.*/
 
 #include "LIN.h"
 
