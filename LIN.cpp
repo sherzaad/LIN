@@ -3,7 +3,7 @@
   ver 1.0 created by Sherzaad Dinah
   Revision History
   ver1.0 - Newly created
-  ver1.1 - fixed incorrect PID calculation in "GetPID"
+  ver1.1 - fixed incorrect PID calculation in "GetPID" 
 */
 
 #include "LIN.h"
