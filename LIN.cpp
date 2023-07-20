@@ -30,24 +30,19 @@ uint8_t LINClass::GetPID(uint8_t id)
 {
   uint8_t pid, bit6, bit7, temp;
 
-  temp = id & 0x03F; //get rid of P1 and P2 in case included
+  temp = id & 0x03F; //get rid of P0 and P1 in case included
+  
+  //P0(bit6) = ID0^ID1^ID2^ID4
+  //P1(bit7) = !(ID1^ID3^ID4^ID5)
 
   //calculate parity bits for protected id(pid) from id
+  //calcultate P0
+  bit6 = ((temp^(((temp>>1)^(temp>>2))^(temp>>4)))&0x01)<<6;
+
   //calcultate P1
-  bit6 = BIT_VAL(id, 0);
-  bit6 ^= BIT_VAL(id, 2);
-  bit6 ^= BIT_VAL(id, 3);
-  bit6 ^= BIT_VAL(id, 4);
-  bit6 = (bit6 && 0x01) << 6;
+  bit7 = (~(((temp>>1)^(((temp>>3)^(temp>>4))^(temp>>5)))&0x01))<<7;
 
-  //calcultate P2
-  bit7 = BIT_VAL(id, 1);
-  bit7 ^= BIT_VAL(id, 3);
-  bit7 ^= BIT_VAL(id, 4);
-  bit7 ^= BIT_VAL(id, 5);
-  bit7 = ((~bit7) && 0x01) << 7;
-
-  pid = temp | bit6 | bit7;
+  pid = temp | (bit6 | bit7);
 
   return pid;
 }
