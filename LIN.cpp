@@ -4,6 +4,7 @@
   Revision History
   ver1.0 - Newly created
   ver1.1 - fixed incorrect PID calculation in "GetPID" 
+  ver1.2 - "GetChecksum" revised. no change to calculation method
 */
 
 #include "LIN.h"
@@ -58,20 +59,21 @@ uint8_t LINClass::VerifyPID(uint8_t pid)
   return 0; //invalid pid
 }
 
+enum Chksum_T {CLASSIC, ENHANCED};
+
 //returns Checksum for given LIN frame
-uint8_t LINClass::GetChecksum(uint8_t pid, uint8_t *msg_data, uint8_t dlc, uint8_t LINver)
+uint8_t LINClass::GetChecksum(uint8_t pid, uint8_t *msg_data, uint8_t dlc, enum Chksum_T typ)
 {
   uint8_t length = dlc;
 
-  //----LINver=1 any version before 2.0. LINver=2 version 2.0 and above----//
-  //LINver=1 Classic Checksum
+  //Classic Checksum. May be used in all LIN protocol versions
   uint16_t calc_checksum = msg_data[0];
   for (uint8_t i = 1; i < length; ++i) {
     calc_checksum += msg_data[i];
     if(calc_checksum > 255) calc_checksum -= 255;
   }
 
-  if (LINver == 2) { //Enhanced Checksum
+  if (typ == ENHANCED) { //Enhanced Checksum. May be used only where LIN Protocol 2.x has been applied
     calc_checksum += pid;
   }
 
