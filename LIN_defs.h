@@ -3,6 +3,7 @@
   ver 1.0 created by Sherzaad Dinah
   Revision History
   ver1.0 - Newly created
+  version 1.1 - enum Chksum_T added to support update to "GetChecksum" routine
 */
 
 #ifndef	LIN_DEFS_H
@@ -30,6 +31,8 @@
 #define DATA 0x0400
 #define CHECKSUM 0x0500
 #define NEW_FRAME 0x0600
+
+enum Chksum_T {CLASSIC, ENHANCED};
 
 typedef struct
 {
