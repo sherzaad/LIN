@@ -59,8 +59,6 @@ uint8_t LINClass::VerifyPID(uint8_t pid)
   return 0; //invalid pid
 }
 
-enum Chksum_T {CLASSIC, ENHANCED};
-
 //returns Checksum for given LIN frame
 uint8_t LINClass::GetChecksum(uint8_t pid, uint8_t *msg_data, uint8_t dlc, enum Chksum_T typ)
 {
