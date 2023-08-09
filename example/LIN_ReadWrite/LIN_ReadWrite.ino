@@ -22,7 +22,7 @@ void setup() {
   LIN2.begin(LIN_BAUD2);
   Serial.println("READY");
   
-  Checksum = LIN.GetChecksum(msg_pid, msg_Data, msg_dlc); //assuming LIN Version Protocol 2.x
+  Checksum = LIN.GetChecksum(msg_pid, msg_Data, msg_dlc, ENHANCED); //assuming LIN Version Protocol 2.x
 
 }
 
