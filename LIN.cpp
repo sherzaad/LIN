@@ -5,6 +5,7 @@
   ver1.0 - Newly created
   ver1.1 - fixed incorrect PID calculation in "GetPID" 
   ver1.2 - "GetChecksum" revised. no change to calculation method
+  ver1.3 - "SendBreak" and "SendHeaderFrame" updated. no longer required to include baudrate (now taken from initialised network instead)
 */
 
 #include "LIN.h"
@@ -14,7 +15,8 @@ uint16_t LINClass::FieldType(uint16_t val) {
   return (val & 0xFF00);
 }
 
-void LINClass::SendBreak(HardwareSerialLIN &s, unsigned long baud, uint8_t brkbits){
+void LINClass::SendBreak(HardwareSerialLIN &s, uint8_t brkbits){
+  unsigned long baud = s.getBaudRate();
   unsigned long brk_baud = 9 * (baud/ brkbits);
 
   //breakfield mode
@@ -81,9 +83,9 @@ uint8_t LINClass::GetChecksum(uint8_t pid, uint8_t *msg_data, uint8_t dlc, enum 
 }
 
 //send breakfield, sync field and LIN PID
-void LINClass::SendHeaderFrame(HardwareSerialLIN &s,unsigned long baud, uint8_t pid, uint8_t brkbits, uint8_t sync)
+void LINClass::SendHeaderFrame(HardwareSerialLIN &s, uint8_t pid, uint8_t brkbits, uint8_t sync)
 {
-  SendBreak(s, baud, brkbits);
+  SendBreak(s, brkbits);
   
   s.write(sync);
   s.write(pid);
