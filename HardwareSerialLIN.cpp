@@ -94,7 +94,8 @@ void HardwareSerialLIN::begin(unsigned long baud, byte config)
 {
   // Try u2x mode first
   uint16_t baud_setting = (F_CPU / 4 / baud - 1) / 2;
-
+	
+  setBaudRate(baud);
   Read_Timeout(baud);
   *_ucsra = 1 << U2X0;
 
