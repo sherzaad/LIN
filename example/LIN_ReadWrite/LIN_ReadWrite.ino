@@ -18,8 +18,8 @@ void setup() {
    * Else you may have 'multiple definition' compile error 
    */
   Serial.begin(115200); //HardwareSerialLIN0.cpp moved to 'OtherThanLIN' folder since using Serial0 port for Serial Monitor
-  LIN1.begin(LIN_BAUD2);
-  LIN2.begin(LIN_BAUD2);
+  LIN1.begin(LIN_BAUD1);
+  LIN2.begin(LIN_BAUD1);
   Serial.println("READY");
   
   Checksum = LIN.GetChecksum(msg_pid, msg_Data, msg_dlc, ENHANCED); //assuming LIN Version Protocol 2.x
@@ -28,8 +28,10 @@ void setup() {
 
 void loop() {
   Serial.print("\nSending LIN FRAME...");
-  LIN.SendHeaderFrame(LIN1, LIN_BAUD2, msg_pid);
+  LIN.SendHeaderFrame(LIN1, msg_pid);
   LIN.SendDataFrame(LIN1, msg_Data , msg_dlc, Checksum);
+  ++msg_Data[3];
+  Checksum = LIN.GetChecksum(msg_pid, msg_Data, msg_dlc, ENHANCED); //refesh checksum value
   
   delay(1000); //arbitrary delay
   
