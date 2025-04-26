@@ -1,19 +1,18 @@
 /*
   LIN.h- Library for Arduino LIN shield based on Hardware Serial Library for Arduino
-  ver 1.0 created by Sherzaad Dinah
+  created by Sherzaad Dinah
+
   Revision History
   ver1.0 - Newly created
   ver1.1 - fixed incorrect PID calculation in "GetPID" 
   ver1.2 - "GetChecksum" revised. no change to calculation method
   ver1.3 - "SendBreak" and "SendHeaderFrame" updated. no longer required to include baudrate (now taken from initialised network instead)
+  ver1.4 - uint16_t LINClass::FieldType(uint16_t val) deleted. public class variable "RxData" initialisation added
 */
 
 #include "LIN.h"
 
-//return the LIN frame type received by UART buffer
-uint16_t LINClass::FieldType(uint16_t val) {
-  return (val & 0xFF00);
-}
+uint16_t LINClass::RxData = 0;
 
 void LINClass::SendBreak(HardwareSerialLIN &s, uint8_t brkbits){
   unsigned long baud = s.getBaudRate();
