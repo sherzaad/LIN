@@ -5,7 +5,7 @@
 #define LIN_BAUD1 9600
 #define LIN_BAUD2 19200UL
 
-const uint8_t msg_pid = 0x0D;
+const uint8_t msg_pid = 0x1D;
 const uint8_t msg_dlc = 4;
 uint8_t msg_Data[msg_dlc] = {0x00,0x79,0x00,0x00};
 uint8_t Checksum; 
@@ -36,31 +36,31 @@ void loop() {
   delay(1000); //arbitrary delay
   
   while (LIN2.available()) {
-    uint16_t val = LIN2.read();
+    LIN.RxData = LIN2.read();
 
-    if (LIN.FieldType(val) == BREAKFIELD) {
+    if (LIN.RxDataType() == BREAKFIELD) {
       Serial.println("");
     }
-    else if (LIN.FieldType(val) == NEW_FRAME) {
+    else if (LIN.RxDataType() == NEW_FRAME) {
       Serial.println("");
       Serial.print("New Frame: ");
-      Serial.print(val & 0xFF, HEX);
+      Serial.print(LIN.RxDataValue(), HEX);
       Serial.print(", ");
     }
-    else if (LIN.FieldType(val) == SYNC) {
+    else if (LIN.RxDataType() == SYNC) {
       Serial.print("Sync: ");
-      Serial.print(val & 0xFF, HEX);
+      Serial.print(LIN.RxDataValue(), HEX);
       Serial.print(", ");
     }
-    else if (LIN.FieldType(val) == PID) {
+    else if (LIN.RxDataType() == PID) {
       Serial.print("PID: ");
-      Serial.print(val & 0xFF, HEX);
+      Serial.print(LIN.RxDataValue(), HEX);
       Serial.print(", ID: ");
-      Serial.print((val & 0xFF) & 0x3F, HEX);
+      Serial.print((LIN.RxDataValue()) & 0x3F, HEX);
       Serial.print(", Data: ");
     }
-    else if (LIN.FieldType(val) == DATA) {
-      Serial.print(val & 0xFF, HEX); //data/checksum bytes. 
+    else if (LIN.RxDataType() == DATA) {
+      Serial.print(LIN.RxDataValue(), HEX); //data/checksum bytes. 
                                      //Last received DATA byte of a given LIN frame would normally be the Checksum Byte
       Serial.print(", ");
     }
