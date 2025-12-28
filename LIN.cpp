@@ -101,3 +101,5 @@ void LINClass::SendDataFrame(HardwareSerialLIN &s, uint8_t *data, uint8_t dlc, u
 
   s.write(checksum);
 }
+
+LINClass LIN;
